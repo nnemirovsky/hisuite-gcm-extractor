@@ -7,7 +7,9 @@ password, or device identifier appears anywhere in this repository.
 from __future__ import annotations
 
 import io
+import os
 import pathlib
+import sys
 import tarfile
 import tempfile
 from collections.abc import Iterable, Mapping, Sequence
@@ -36,6 +38,19 @@ SYMLINKS_SUPPORTED = _symlinks_work()
 requires_symlinks = pytest.mark.skipif(
     not SYMLINKS_SUPPORTED,
     reason="this platform does not allow creating symlinks",
+)
+
+# os.geteuid does not exist on Windows, and mypy knows it, so the check is
+# written as a platform branch rather than a short-circuiting expression.
+if sys.platform == "win32":
+    POSIX_PERMISSIONS = False
+else:
+    POSIX_PERMISSIONS = os.geteuid() != 0
+
+#: Tests that rely on an unprivileged POSIX user being denied access.
+requires_posix_permissions = pytest.mark.skipif(
+    not POSIX_PERMISSIONS,
+    reason="needs POSIX permission bits and a non-root user",
 )
 
 PASSWORD = b"correct horse battery staple"

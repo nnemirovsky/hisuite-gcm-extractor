@@ -5,7 +5,7 @@ import pathlib
 import stat
 
 import pytest
-from conftest import requires_symlinks
+from conftest import requires_posix_permissions, requires_symlinks
 
 from hisuite_gcm.manifest import sha256, write_manifest
 
@@ -62,10 +62,7 @@ def test_manifest_skips_symlinks(tmp_path: pathlib.Path) -> None:
     assert result.path.read_text(encoding="utf-8").endswith("  real.txt\n")
 
 
-@pytest.mark.skipif(
-    os.name == "nt" or os.geteuid() == 0,
-    reason="POSIX permission bits, and root can read anything anyway",
-)
+@requires_posix_permissions
 def test_unreadable_files_are_reported_not_fatal(tmp_path: pathlib.Path) -> None:
     readable = tmp_path / "readable.txt"
     readable.write_text("ok", encoding="utf-8")
