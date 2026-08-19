@@ -1,9 +1,10 @@
 # Contributing
 
 Contributions that improve format compatibility, diagnostics, tests, and safe
-human-readable exports are welcome. So are plain bug reports — including "the
-error message did not tell me what to do next", which is a real bug in a tool
-people reach for on a bad day.
+human-readable exports are welcome. Plain bug reports are welcome too. An error
+message that does not say what to do next counts as a bug: users of this tool
+are often not developers, and a message they cannot act on wastes the one
+attempt they may get.
 
 ## Development
 
@@ -76,10 +77,8 @@ Readable exports are valuable, but application schemas change frequently. Read
 - Degrade on its own without blocking raw authenticated extraction.
 - Use entirely synthetic databases in its tests.
 
-## Being a good neighbour
+## Review expectations
 
-This project is used by people recovering data after a death, a theft, or a
-failed device. Assume good faith, keep review comments about the code, and
-remember that a confused bug report is usually a documentation problem. Report
-conduct concerns to the maintainers through the contact channel named in
-[SECURITY.md](SECURITY.md).
+Keep review comments about the code. Assume good faith, and treat a confused bug
+report as a documentation problem first. Conduct concerns go to the maintainers
+through the private channel named in [SECURITY.md](SECURITY.md).
