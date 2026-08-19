@@ -9,6 +9,7 @@ from conftest import (
     PASSWORD,
     WRONG_PASSWORD,
     encrypt,
+    requires_symlinks,
     sqlite_payload,
     tar_bytes,
     write_info,
@@ -122,6 +123,7 @@ def test_unsafe_module_names_never_reach_the_filesystem(tmp_path: pathlib.Path, 
     assert discover(root) == []
 
 
+@requires_symlinks
 def test_symlinked_payloads_are_ignored(tmp_path: pathlib.Path) -> None:
     root = tmp_path / "backup"
     module = "com.example.linked"
@@ -134,6 +136,7 @@ def test_symlinked_payloads_are_ignored(tmp_path: pathlib.Path) -> None:
     assert discover(root) == []
 
 
+@requires_symlinks
 def test_symlinked_app_data_directory_is_ignored(tmp_path: pathlib.Path) -> None:
     root = tmp_path / "backup"
     module = "com.example.linkdir"

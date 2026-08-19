@@ -5,6 +5,7 @@ import pathlib
 import stat
 
 import pytest
+from conftest import requires_symlinks
 
 from hisuite_gcm.manifest import sha256, write_manifest
 
@@ -48,6 +49,7 @@ def test_manifest_escapes_names_like_coreutils(tmp_path: pathlib.Path) -> None:
     assert line.endswith("  odd\\\\name.txt")
 
 
+@requires_symlinks
 def test_manifest_skips_symlinks(tmp_path: pathlib.Path) -> None:
     (tmp_path / "real.txt").write_text("real", encoding="utf-8")
     (tmp_path / "link.txt").symlink_to(tmp_path / "real.txt")
@@ -60,8 +62,10 @@ def test_manifest_skips_symlinks(tmp_path: pathlib.Path) -> None:
     assert result.path.read_text(encoding="utf-8").endswith("  real.txt\n")
 
 
-@pytest.mark.skipif(os.name == "nt", reason="POSIX permission bits")
-@pytest.mark.skipif(os.geteuid() == 0, reason="root can read anything")
+@pytest.mark.skipif(
+    os.name == "nt" or os.geteuid() == 0,
+    reason="POSIX permission bits, and root can read anything anyway",
+)
 def test_unreadable_files_are_reported_not_fatal(tmp_path: pathlib.Path) -> None:
     readable = tmp_path / "readable.txt"
     readable.write_text("ok", encoding="utf-8")

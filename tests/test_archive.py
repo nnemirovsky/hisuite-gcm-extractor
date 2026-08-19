@@ -3,7 +3,7 @@ from __future__ import annotations
 import pathlib
 import tarfile
 
-from conftest import sqlite_payload, tar_bytes, tar_with_members
+from conftest import requires_symlinks, sqlite_payload, tar_bytes, tar_with_members
 
 from hisuite_gcm.archive import extract_tar_safely, payload_kind
 
@@ -79,6 +79,7 @@ def test_directory_members_are_created(tmp_path: pathlib.Path) -> None:
     assert (tmp_path / "out/files/empty").is_dir()
 
 
+@requires_symlinks
 def test_symlinked_destination_parent_cannot_be_used_to_escape(tmp_path: pathlib.Path) -> None:
     outside = tmp_path / "outside"
     outside.mkdir()

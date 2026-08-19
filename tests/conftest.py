@@ -9,12 +9,34 @@ from __future__ import annotations
 import io
 import pathlib
 import tarfile
+import tempfile
 from collections.abc import Iterable, Mapping, Sequence
 
 import pytest
 from Crypto.Cipher import AES
 
 from hisuite_gcm.crypto import TAG_SIZE, derive_key_and_nonce
+
+
+def _symlinks_work() -> bool:
+    """Windows only allows symlinks with Developer Mode or elevation."""
+
+    with tempfile.TemporaryDirectory() as directory:
+        root = pathlib.Path(directory)
+        try:
+            (root / "link").symlink_to(root / "target")
+        except (OSError, NotImplementedError):
+            return False
+        return True
+
+
+SYMLINKS_SUPPORTED = _symlinks_work()
+
+#: Tests that must create a symlink to mean anything.
+requires_symlinks = pytest.mark.skipif(
+    not SYMLINKS_SUPPORTED,
+    reason="this platform does not allow creating symlinks",
+)
 
 PASSWORD = b"correct horse battery staple"
 WRONG_PASSWORD = b"not the password"
