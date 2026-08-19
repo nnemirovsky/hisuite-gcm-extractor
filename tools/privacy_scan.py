@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Scan repository files for private data before publishing.
 
-This project is published from a machine that also holds real family backups,
-so the release checklist runs a mechanical check for the categories of leak
-that matter here: absolute home paths, contact details, device identifiers,
-key material, and anything that looks like a real credential.
+Development happens on machines that also hold real backup data, so the release
+checklist runs a mechanical check for the categories of leak that matter here:
+absolute home paths, contact details, device identifiers, key material, and
+anything that looks like a real credential.
 
 Usage::
 
