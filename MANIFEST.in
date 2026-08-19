@@ -1,0 +1,12 @@
+include CHANGELOG.md
+include CONTRIBUTING.md
+include LICENSE
+include SECURITY.md
+recursive-include docs *.md
+recursive-include tests *.py
+include tools/privacy_scan.py
+
+# Repository workflow files: useful to a contributor reading the repository,
+# not to someone installing the package. CLAUDE.md is not listed above, so it
+# is already absent from the sdist.
+prune .github

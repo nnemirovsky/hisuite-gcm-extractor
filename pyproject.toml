@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hisuite-gcm"
+description = "Recover authenticated AES-GCM payloads from recent Huawei HiSuite backups"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "hisuite-gcm contributors"}]
+keywords = ["Huawei", "HiSuite", "KoBackup", "backup", "recovery", "forensics", "AES-GCM"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Intended Audience :: Information Technology",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security :: Cryptography",
+  "Topic :: System :: Archiving :: Backup",
+  "Topic :: Utilities",
+  "Typing :: Typed",
+]
+dependencies = ["pycryptodome>=3.20,<4"]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2",
+  "mypy>=1.11",
+  "pytest>=8,<9",
+  "ruff>=0.6",
+  "setuptools>=77",
+]
+
+[project.scripts]
+hisuite-gcm = "hisuite_gcm.cli:main"
+
+[project.urls]
+Documentation = "https://github.com/nnemirovsky/hisuite-gcm-extractor#readme"
+Issues = "https://github.com/nnemirovsky/hisuite-gcm-extractor/issues"
+Source = "https://github.com/nnemirovsky/hisuite-gcm-extractor"
+Changelog = "https://github.com/nnemirovsky/hisuite-gcm-extractor/blob/main/CHANGELOG.md"
+
+[tool.setuptools.dynamic]
+version = {attr = "hisuite_gcm._version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+hisuite_gcm = ["py.typed"]
+
+[tool.pytest.ini_options]
+addopts = "-q --strict-markers"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "C4", "RUF"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src", "tests"]
+strict = true
+warn_unreachable = true
