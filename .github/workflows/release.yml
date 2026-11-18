@@ -1,0 +1,41 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # The tag is the release: refuse one that disagrees with the package
+      # version. pyproject.toml reads it from src/hisuite_gcm/_version.py.
+      - name: check the tag matches the package version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(grep -oE '^__version__ = "[^"]+"' src/hisuite_gcm/_version.py | cut -d'"' -f2)"
+          if [ "$version" != "$tag" ]; then
+            echo "tag $GITHUB_REF_NAME does not match src/hisuite_gcm/_version.py version $version" >&2
+            exit 1
+          fi
+
+      # gh ships on the runner, so no third-party action is needed. A release
+      # already published from a workstation is left as it is.
+      - name: publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "release $GITHUB_REF_NAME already exists"
+          else
+            gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag
+          fi
