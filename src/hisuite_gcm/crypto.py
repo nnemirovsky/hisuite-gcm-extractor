@@ -59,14 +59,12 @@ def derive_key_and_nonce(password: bytes, enc_msg_v3: str) -> tuple[bytes, bytes
             f"({MATERIAL_SIZE} bytes), got {len(enc_msg_v3)} characters"
         )
     material = bytes.fromhex(enc_msg_v3)
-    # PyCryptodome accepts a bytes password and a two-argument PRF at runtime;
-    # its bundled stubs describe only the narrower str/one-argument form.
     key: bytes = PBKDF2(
-        password,  # type: ignore[arg-type]
+        password,
         material[:SALT_SIZE],
         KEY_SIZE,
         count=ITERATIONS,
-        prf=_prf,  # type: ignore[arg-type]
+        prf=_prf,
     )
     return key, material[SALT_SIZE:]
 
